@@ -499,13 +499,6 @@ try:
     #make NHA_zonsew = NHA * PCTGROWTH
     arcpy.CalculateField_management(copyFeature + '.shp', "NHA_zonsew", "float('!PCTGROWTH!') * float('!NHA!')", "PYTHON_9.3")
 
-    ####what is this section for?
-    #feat_class =  output + county.name + '_zon_sew_nha' + '.shp'
-    #feat_layer = county.name + '_zon_sew_nha'
-    #arcpy.MakeFeatureLayer_management(feat_class, feat_layer)
-    #inFeatures1 = outfc + feat_layer + ".dbf"
-    ###what is this section for?
-
     #make a concatenated zonsew field
     #search first - get collection of rows from feature class
     srows2 = arcpy.SearchCursor(inTable)
