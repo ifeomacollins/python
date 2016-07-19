@@ -7,8 +7,11 @@
 import arcpy
 import sys
 
-import socket #what is this for?
-sys.path.append(r'\\' + socket.gethostname() + "M:\icollins\aarp\scripts")
+import socket 
+#sys.path.append(r'\\' + socket.gethostname() + "M:\icollins\aarp\scripts")
+#remote computer:
+sys.path.append(r'\\' + socket.gethostname() + "C:\Users\icollins\Documents\scripts\vs\aarp")
+
 
 import join_query_function
 
@@ -21,18 +24,20 @@ CSV_Table = arcpy.GetParameterAsText(3)
 CSV_Field_for_Join = arcpy.GetParameterAsText(4)
 Keep_All_Target_Features = arcpy.GetParameterAsText(5)
 Join_Output = arcpy.GetParameterAsText(6)
+Geocoded_Locations = arcpy.GetParameterAsText(7)
+Unmatched_Rows = arcpy.GetParameterAsText(8)
 
 
 #function to call the join query code
-def join_query_gp (method, geography, geog_field, CSV_Table, CSV_Field_for_Join, Keep_All_Target_Features, Join_Output):
-    if method == '' and geography == '' and geog_field == '' and CSV_Table == '' and CSV_Field_for_Join == '' and Keep_All_Target_Features == '' and Join_Output =='':
+def join_query_gp (method, geography, geog_field, CSV_Table, CSV_Field_for_Join, Keep_All_Target_Features, Join_Output, Geocoded_Locations, Unmatched_Rows):
+    if method == '' and geography == '' and geog_field == '' and CSV_Table == '' and CSV_Field_for_Join == '' and Keep_All_Target_Features == '' and Join_Output =='' and Geocoded_Locations=="" and Unmatched_Rows =="":
         Result = ""
     else:
-        Result = join_query_function.join_geog_csv(method, geography, geog_field, CSV_Table, CSV_Field_for_Join, Keep_All_Target_Features, Join_Output)
+        Result = join_query_function.join_geog_csv(method, geography, geog_field, CSV_Table, CSV_Field_for_Join, Keep_All_Target_Features, Join_Output, Geocoded_Locations, Unmatched_Rows)
         arcpy.AddMessage(Result)
     return Result
 
-join_query_gp(method, geography, geog_field, CSV_Table, CSV_Field_for_Join, Keep_All_Target_Features, Join_Output)
+join_query_gp(method, geography, geog_field, CSV_Table, CSV_Field_for_Join, Keep_All_Target_Features, Join_Output, Geocoded_Locations, Unmatched_Rows)
 
 '''
 #supply values for tool which will become default values to return empty output
