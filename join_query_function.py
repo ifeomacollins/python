@@ -50,8 +50,8 @@ value_field = "value"
 #gp service location: c:\arcgisserver\directories\arcgisjobs\%service%_gpserver\%jobid%\scratch\scratch.gdb.
 geocode_result = arcpy.env.scratchGDB + "\\" + "geocoding_results"   #added geocoding_results so will add display
 
-csv_result = arcpy.env.scratchGDB + "\\" + "csv_results.csv" 
-
+#csv_empty = arcpy.env.scratchGDB + "\\" + "csv_results_empty.csv" 
+csv_empty = r"E:\sde-db-connections\gisent2 as gisent1-owner.sde\gisent2.DBO.unmatched_empty"
 
 try:
     def join_geog_csv(method, geography, geog_field, CSV_Table, CSV_Field_for_Join, Keep_All_Target_Features, Join_Output, Geocoded_Locations, Unmatched_Rows):
@@ -133,8 +133,13 @@ try:
 
            #Empty Geocoded results for feature layer requirement
            arcpy.SetParameter(7, geocoded_results_empty)
+
+           #emtpy csv for web map?
+           arcpy.SetParameter(8, csv_empty)
            
        if method == 'Geocoded Addresses':
+           csv_result = arcpy.env.scratchGDB + "\\" + "csv_results.csv"
+           
            #Overwrite the output feature class if it already exists
            arcpy.env.overwriteOutput = True
 
@@ -151,7 +156,9 @@ try:
            #address_fields = "Address Address VISIBLE NONE;City <None> VISIBLE NONE;Region <None> VISIBLE NONE;Postal <None> VISIBLE NONE"
 
            #for point address locator
-           address_locator = r"Z:\Locators\USA_PointAddress"
+           edrive = r"\\aarpgis.aarpdev.spatialsys.com\e\Locators"
+           address_locator = os.path.join(edrive, "USA_PointAddress")
+           #address_locator = r"Z:\Locators\USA_PointAddress"
            address_fields = "Street " + CSV_Field_for_Join + " VISIBLE NONE;City <None> VISIBLE NONE;State <None> VISIBLE NONE;ZIP <None> VISIBLE NONE"
 
            arcpy.AddMessage("\nThe CSV table that will be used is " + address_table + ".\n")
@@ -164,13 +171,10 @@ try:
 
            arcpy.AddMessage(Input_Layer)
            
-           #TakeOutTrash(Input_Layer) #delete feature layer if already exists
-           
            arcpy.GeocodeAddresses_geocoding(address_table, address_locator, address_fields, Input_Layer)
 
            arcpy.AddMessage('Geocoding done.\n')
 
-           arcpy.SetParameter(7, Input_Layer) 
 
            #unmatched addresses
 
@@ -189,7 +193,7 @@ try:
 
            arcpy.MakeFeatureLayer_management (Input_Layer, geocoded_u_lyr)
 
-           arcpy.AddMessage("Make feature layer done.\n")
+           arcpy.AddMessage("Make feature layer done for unmatched.\n")
            
            arcpy.SelectLayerByAttribute_management (geocoded_u_lyr, "NEW_SELECTION", where_clause)
 
@@ -210,7 +214,32 @@ try:
                    w.writerow(field_vals)
                del row
 
-           arcpy.SetParameter(8, csv_result) 
+           arcpy.SetParameter(8, csv_result)
+
+           #unselect features
+           arcpy.SelectLayerByAttribute_management (geocoded_u_lyr, "CLEAR_SELECTION")
+
+           #make new feature layer with new name for geocding results
+           arcpy.MakeFeatureLayer_management (Input_Layer, "geocoding_results")
+
+           arcpy.AddMessage("Make feature layer done for matched.\n")
+
+           #do query status = M // so web map extent won't be NAN
+           where_clause = "Status = 'M' "
+           arcpy.SelectLayerByAttribute_management ("geocoding_results", "NEW_SELECTION", where_clause)
+
+           mrows_num = arcpy.GetCount_management("geocoding_results")
+
+           arcpy.AddMessage("Number of matched rows in results is " + str(mrows_num) + ".\n")
+
+           outFeatureClass = arcpy.env.scratchGDB + "\\" + "geocoding_results_matches" 
+
+           #copy seleection to another feature class
+           arcpy.CopyFeatures_management("geocoding_results", outFeatureClass)
+
+           #set parameter 7 geocoder results with Match here
+
+           arcpy.SetParameter(7, outFeatureClass) 
            
            arcpy.AddMessage('\nGeocoding and unmatched addresses listed in table done.\n')
 
