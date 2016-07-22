@@ -25,7 +25,7 @@ for mxdfile in arcpy.ListFiles("*.mxd"):   #linked to where workspace is set
     #print lyr
 
     #access different layers in mxd
-    blockgroup_aarp_lyr = arcpy.mapping.ListLayers(mxd, "BlockGroup")
+    blockgroup__lyr = arcpy.mapping.ListLayers(mxd, "BlockGroup")
 
 
     #loop through every layer in dataframe #get access to correct layers
