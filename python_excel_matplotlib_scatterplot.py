@@ -13,7 +13,7 @@ x = []
 y = []
 
 '''
-#csv file option
+#csv file option 
 with open(r'file_here.csv', 'r') as csvfile:
 	plots = csv.reader(csvfile, delimiter=',')
 	csvfile.readline() #skip first line
