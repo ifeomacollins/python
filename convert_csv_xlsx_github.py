@@ -31,7 +31,7 @@ for file in glob.glob("*.csv"):
     filename = csv_folder+file
     print filename
     f = open(filename)
-    reader = csv.reader(f,delimiter=":")
+    reader = csv.reader(f,delimiter=",") #this character matters. use , to put each value in a column
 
     for row in reader:
         ws.append(row)
