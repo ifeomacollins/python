@@ -38,7 +38,7 @@ print ("\n")
 print ("\n")
 
 
-arcpy.env.workspace = r"\\kcna_fas_cifs\homedir\pcolli01\Documents\projects\global_landcover\RondoniaDeforestation" + "\\"
+arcpy.env.workspace = r"\\projects\global_landcover\RondoniaDeforestation" + "\\"
 
 
 #Before start, manually export rasters to make own copy to work on in desktop; save as tif
@@ -84,7 +84,7 @@ for raster in raster_list:
     outReclassify = Reclassify(inRaster, reclassField, remap, "NODATA")
 
     # Save the output with reclassify folder #output must end in file type (ex. .tif)
-    outReclassify.save(r"\\kcna_fas_cifs\homedir\pcolli01\Documents\projects\global_landcover\RondoniaDeforestation\reclassify" + "\\" + raster)
+    outReclassify.save(r"\\Documents\projects\global_landcover\RondoniaDeforestation\reclassify" + "\\" + raster)
     print ("reclassifying is complete for this raster:" + raster)
     print ("\n")
     '''
@@ -94,7 +94,7 @@ for raster in raster_list:
 #now use reclassified rasters created above
 #list rasters in reclassified folder
 
-arcpy.env.workspace = r"\\kcna_fas_cifs\homedir\pcolli01\Documents\projects\global_landcover\RondoniaDeforestation\reclassify" + "\\"
+arcpy.env.workspace = r"\\Documents\projects\global_landcover\RondoniaDeforestation\reclassify" + "\\"
 
 raster_list2 = arcpy.ListRasters("*")
 
@@ -124,7 +124,7 @@ print ("\n")
 print ("Doing raster subtract")
 
 # Save the output 
-outMinus.save(r"\\kcna_fas_cifs\homedir\pcolli01\Documents\projects\global_landcover\RondoniaDeforestation\reclassify\subtract\Ron_LC_2020_minus_1992.tif")
+outMinus.save(r"\\Documents\projects\global_landcover\RondoniaDeforestation\reclassify\subtract\Ron_LC_2020_minus_1992.tif")
 print ("\n")
 print ("Saved raster extract")
 
